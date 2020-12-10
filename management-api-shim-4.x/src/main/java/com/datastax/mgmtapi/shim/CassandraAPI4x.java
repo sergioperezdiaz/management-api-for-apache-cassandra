@@ -32,7 +32,6 @@ import org.apache.cassandra.auth.IRoleManager;
 import org.apache.cassandra.config.DatabaseDescriptor;
 import org.apache.cassandra.cql3.CQLStatement;
 import org.apache.cassandra.db.ConsistencyLevel;
-import org.apache.cassandra.db.HintedHandOffManager;
 import org.apache.cassandra.db.Keyspace;
 import org.apache.cassandra.db.compaction.CompactionManager;
 import org.apache.cassandra.dht.IPartitioner;
@@ -279,12 +278,6 @@ public class CassandraAPI4x implements CassandraAPI
     public IRoleManager getRoleManager()
     {
         return DatabaseDescriptor.getRoleManager();
-    }
-
-    @Override
-    public HintedHandOffManager getHintedHandoffManager()
-    {
-        return HintedHandOffManager.instance;
     }
 
     @Override

@@ -32,11 +32,9 @@ import io.reactivex.Single;
 import org.apache.cassandra.auth.IRoleManager;
 import org.apache.cassandra.concurrent.TPCTaskType;
 import org.apache.cassandra.config.DatabaseDescriptor;
-import org.apache.cassandra.cql3.CQLStatement;
 import org.apache.cassandra.cql3.QueryProcessor;
 import org.apache.cassandra.cql3.UntypedResultSet;
 import org.apache.cassandra.db.ConsistencyLevel;
-import org.apache.cassandra.db.HintedHandOffManager;
 import org.apache.cassandra.db.Keyspace;
 import org.apache.cassandra.db.compaction.CompactionManager;
 import org.apache.cassandra.dht.IPartitioner;
@@ -287,12 +285,6 @@ public class DseAPI68 implements CassandraAPI
     public IRoleManager getRoleManager()
     {
         return DatabaseDescriptor.getRoleManager();
-    }
-
-    @Override
-    public HintedHandOffManager getHintedHandoffManager()
-    {
-        return HintedHandOffManager.instance;
     }
 
     @Override

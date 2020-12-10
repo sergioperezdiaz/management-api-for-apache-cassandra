@@ -33,12 +33,12 @@ public class UnixSocketServer4x
     public static ChannelInitializer<Channel> makeSocketInitializer(final Server.ConnectionTracker connectionTracker)
     {
         // Stateless handlers
-        final Message.ProtocolDecoder messageDecoder = new Message.ProtocolDecoder();
-        final Message.ProtocolEncoder messageEncoder = new Message.ProtocolEncoder();
+        final PreV5Handlers.ProtocolDecoder messageDecoder = PreV5Handlers.ProtocolDecoder.instance;
+        final PreV5Handlers.ProtocolEncoder messageEncoder = PreV5Handlers.ProtocolEncoder.instance;
         final ChannelHandler frameDecompressor = new Frame.InboundBodyTransformer();
         final ChannelHandler frameCompressor = new Frame.OutboundBodyTransformer();
         final Frame.Encoder frameEncoder = new Frame.Encoder();
-        final Message.ExceptionHandler exceptionHandler = new Message.ExceptionHandler();
+        final PreV5Handlers.ExceptionHandler exceptionHandler = PreV5Handlers.ExceptionHandler.instance;
         final UnixSockMessage dispatcher = new UnixSockMessage();
 
         return new ChannelInitializer<Channel>()
@@ -105,9 +105,9 @@ public class UnixSocketServer4x
             {
                 //logger.warn("Exception encountered", t);
                 JVMStabilityInspector.inspectThrowable(t);
-                Message.UnexpectedChannelExceptionHandler handler = new Message.UnexpectedChannelExceptionHandler(ctx.channel(), true);
+                ExceptionHandlers.UnexpectedChannelExceptionHandler handler = new ExceptionHandlers.UnexpectedChannelExceptionHandler(ctx.channel(), true);
                 ctx.writeAndFlush(ErrorMessage.fromException(t, handler).setStreamId(request.getStreamId()));
-                request.getSourceFrame().release();
+                request.getSource().release();
                 return;
             }
             finally
@@ -116,7 +116,7 @@ public class UnixSocketServer4x
             }
 
             ctx.writeAndFlush(response);
-            request.getSourceFrame().release();
+            request.getSource().release();
         }
     }
 
