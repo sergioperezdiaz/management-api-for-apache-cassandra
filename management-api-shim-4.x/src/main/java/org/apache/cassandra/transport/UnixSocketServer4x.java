@@ -35,9 +35,9 @@ public class UnixSocketServer4x
         // Stateless handlers
         final PreV5Handlers.ProtocolDecoder messageDecoder = PreV5Handlers.ProtocolDecoder.instance;
         final PreV5Handlers.ProtocolEncoder messageEncoder = PreV5Handlers.ProtocolEncoder.instance;
-        final ChannelHandler frameDecompressor = new Frame.InboundBodyTransformer();
-        final ChannelHandler frameCompressor = new Frame.OutboundBodyTransformer();
-        final Frame.Encoder frameEncoder = new Frame.Encoder();
+        final ChannelHandler frameDecompressor = Envelope.Decompressor.instance;
+        final ChannelHandler frameCompressor = Envelope.Compressor.instance;
+        final Envelope.Encoder frameEncoder = Envelope.Encoder.instance;
         final PreV5Handlers.ExceptionHandler exceptionHandler = PreV5Handlers.ExceptionHandler.instance;
         final UnixSockMessage dispatcher = new UnixSockMessage();
 
@@ -48,8 +48,17 @@ public class UnixSocketServer4x
             {
                 ChannelPipeline pipeline = channel.pipeline();
 
-                pipeline.addLast("frameDecoder", new Frame.Decoder((channel1, version) ->
-                       new UnixSocketConnection(channel1, version, connectionTracker)));
+                // OLD way
+                // pipeline.addLast("frameDecoder", new Frame.Decoder((channel1, version) ->
+                //       new UnixSocketConnection(channel1, version, connectionTracker)));
+
+                // TODO: This bit needs to change to conform to the new Frame -> Envelope changes
+                // in CASSANDRA-15299. Envelope.Decoder() does not take a ConnectionFactory instance
+                // like Frame.Decoder() did, so we'll have to figure out how to adjust this to use
+                // the new PipelineConfigurator introduced in CASSANDRA-15299.
+
+                // NEW way, but isn't going to work as is.
+                pipeline.addLast("frameDecoder", new Envelope.Decoder());
                 pipeline.addLast("frameEncoder", frameEncoder);
 
                 pipeline.addLast("frameDecompressor", frameDecompressor);
