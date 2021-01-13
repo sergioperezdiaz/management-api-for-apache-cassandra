@@ -9,7 +9,7 @@
     </parent>
 
     <groupId>com.datastax</groupId>
-    <artifactId>datastax-mgmtapi-agent</artifactId>
+    <artifactId>datastax-mgmtapi-agent-3.x</artifactId>
 
     <properties>
         <cassandra.version>3.11.5</cassandra.version>
@@ -34,11 +34,6 @@
                 <dependency>
                     <groupId>com.datastax</groupId>
                     <artifactId>datastax-mgmtapi-shim-3.x</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>com.datastax</groupId>
-                    <artifactId>datastax-mgmtapi-shim-4.x</artifactId>
                     <version>${project.version}</version>
                 </dependency>
                 <dependency>
@@ -95,11 +90,6 @@
                 <dependency>
                     <groupId>com.datastax</groupId>
                     <artifactId>datastax-mgmtapi-shim-3.x</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>com.datastax</groupId>
-                    <artifactId>datastax-mgmtapi-shim-4.x</artifactId>
                     <version>${project.version}</version>
                 </dependency>
                 <dependency>

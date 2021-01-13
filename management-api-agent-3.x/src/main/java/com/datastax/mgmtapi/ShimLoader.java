@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.datastax.mgmtapi.shim.CassandraAPI3x;
-import com.datastax.mgmtapi.shim.CassandraAPI4x;
 import com.datastax.mgmtapi.shims.CassandraAPI;
 import org.apache.cassandra.service.StorageService;
 
@@ -34,9 +33,6 @@ public class ShimLoader
 
         if (version.startsWith("3."))
             return new CassandraAPI3x();
-
-        if (version.startsWith("4."))
-            return new CassandraAPI4x();
 
         throw new RuntimeException("No Cassandra API Shim found for version: " + version);
     }

@@ -61,10 +61,9 @@ if [ "$1" = 'mgmtapi' ]; then
 	#    the fact this jar even exists.
 	
 	if _metrics_collector_supported && ! grep -qxF "JVM_OPTS=\"\$JVM_OPTS -javaagent:/opt/mcac-agent/lib/datastax-mcac-agent.jar\"" < /etc/cassandra/cassandra-env.sh ; then
-    # ensure newline at end of file
+                # ensure newline at end of file
 		echo "" >> /etc/cassandra/cassandra-env.sh
-    echo "JVM_OPTS=\"\$JVM_OPTS -javaagent:/opt/mcac-agent/lib/datastax-mcac-agent.jar\"" >> /etc/cassandra/cassandra-env.sh
-	
+                echo "JVM_OPTS=\"\$JVM_OPTS -javaagent:/opt/mcac-agent/lib/datastax-mcac-agent.jar\"" >> /etc/cassandra/cassandra-env.sh
 		echo "" >> /opt/mcac-agent/config/metric-collector.yaml
 		echo "data_dir_max_size_in_mb: 100" >> /opt/mcac-agent/config/metric-collector.yaml
 	fi
@@ -178,7 +177,14 @@ if [ "$1" = 'mgmtapi' ]; then
 	fi
 
 	cp /tmp/datastax-mgmtapi-common-0.1.0-SNAPSHOT.jar /etc/cassandra
-	cp /tmp/datastax-mgmtapi-agent-0.1.0-SNAPSHOT.jar /etc/cassandra
+        # We need different compiled versions of the agent for Cassandra 3.x and 4.x
+        echo "Cassandra Version: "${CASSANDRA_VERSION}
+        if [ "${CASSANDRA_VERSION:0:1}" = "4" ]; then
+                cp /tmp/datastax-mgmtapi-agent-4.x-0.1.0-SNAPSHOT.jar /etc/cassandra/datastax-mgmtapi-agent-0.1.0-SNAPSHOT.jar
+        else
+	        cp /tmp/datastax-mgmtapi-agent-3.x-0.1.0-SNAPSHOT.jar /etc/cassandra/datastax-mgmtapi-agent-0.1.0-SNAPSHOT.jar
+        fi
+        
 
 	MGMT_API_JAR="$(find "/opt/mgmtapi" -name *server*.jar)"
 
