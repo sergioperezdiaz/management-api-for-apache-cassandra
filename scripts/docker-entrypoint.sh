@@ -175,16 +175,15 @@ if [ "$1" = 'mgmtapi' ]; then
         MGMT_API_NO_KEEP_ALIVE="--no-keep-alive $MGMT_API_NO_KEEP_ALIVE"
         MGMT_API_ARGS="$MGMT_API_ARGS $MGMT_API_NO_KEEP_ALIVE"
     fi
-        cp ${MAAC_PATH}/datastax-mgmtapi-common-0.1.0-SNAPSHOT.jar /etc/cassandra
 
-        # We need different compiled versions of the agent for Cassandra 3.x and 4.x
-        echo "Cassandra Version: "${CASSANDRA_VERSION}
+    # We need different compiled versions of the agent for Cassandra 3.x and 4.x
+    if [ ! -h ${MAAC_PATH}/datastax-mgmtapi-agent-0.1.0-SNAPSHOT.jar ]; then
         if [ "${CASSANDRA_VERSION:0:1}" = "4" ]; then
-                ln -s ${MAAC_PATH}/datastax-mgmtapi-agent-4.x-0.1.0-SNAPSHOT.jar ${MAAC_PATH}/datastax-mgmtapi-agent-0.1.0-SNAPSHOT.jar
+            ln -s ${MAAC_PATH}/datastax-mgmtapi-agent-4.x-0.1.0-SNAPSHOT.jar ${MAAC_PATH}/datastax-mgmtapi-agent-0.1.0-SNAPSHOT.jar
         else
             ln -s ${MAAC_PATH}/datastax-mgmtapi-agent-3.x-0.1.0-SNAPSHOT.jar ${MAAC_PATH}/datastax-mgmtapi-agent-0.1.0-SNAPSHOT.jar
         fi
-        
+    fi
 
     MGMT_API_JAR="$(find "${MAAC_PATH}" -name *server*.jar)"
 
